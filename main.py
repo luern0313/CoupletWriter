@@ -3,7 +3,7 @@ import jieba, random, json
 global infile, outfile, zishi
 try:
     with open("zknow.txt", "r", encoding='utf-8') as zishi_file:
-        zishi = json.loads(zishi_file.read().replace("'", "\""))
+        zishi = json.loads(zishi_file.read())
 except IOError:
     zishi = {}
 
