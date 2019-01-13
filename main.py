@@ -1,6 +1,6 @@
 import jieba, random, json
 
-global infile, outfile, zishi
+global infile, outfile, zishi, writemode
 try:
     with open("zknow.txt", "r", encoding='utf-8') as zishi_file:
         zishi = json.loads(zishi_file.read())
@@ -52,19 +52,25 @@ def couplet(s):
 
 
 def ran(w, r):
-    global zishi
+    global zishi, writemode
     zikey = zishi.keys()
     if w != '' and w in zikey:
         zishikey = zishi[w].keys()
+        max = ["", 0.0]
         for i in zishikey:
             if i != '$':
-                if r < float(zishi[w][i]):
-                    return i
-                else:
-                    r = r - float(zishi[w][i])
+                if writemode == 1:
+                    if r < float(zishi[w][i]):
+                        return i
+                    else:
+                        r = r - float(zishi[w][i])
+                elif writemode == 2:
+                    if float(zishi[w][i]) > max[1]:
+                        max[0] = i
+                        max[1] = float(zishi[w][i])
+        return max[0]
     else:
         return "".join([ran(i, random.random()) for i in w])
-    return ""
 
 
 while True:
@@ -82,6 +88,7 @@ while True:
             out_file.write(str(zishi))
         print("学习完成")
     elif choose == "对对联":
+        writemode = int(input("输入生成对联模式，1为随机模式，2为固定模式"))
         while True:
             try:
                 s = input("输入上联：")
